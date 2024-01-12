@@ -30,7 +30,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import {addProduct, editProduct, deleteProduct, getProducts, getProduct, registerUser, loginUser} from './database.js';
+import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser} from './database.js';
 
 const app = express()
 app.use(cors());
@@ -96,6 +96,22 @@ app.get("/api/getProduct/:id", async (req, res) => {
     console.error(error);
     res.status(500).send({ error: "Internal Server Error" });
   }
+});
+
+app.get("/api/getProductsByCategory", async (req, res) => {
+  const { filterCategory, sortField, sortOrder } = req.query;
+
+  try {
+    const products = await getProductsByCategory(filterCategory, sortField, sortOrder);
+    res.send(products);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });
 
 app.post("/api/addProduct", async (req, res) => {

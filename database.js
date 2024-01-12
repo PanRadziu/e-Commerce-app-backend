@@ -51,28 +51,48 @@ export async function addProduct(NazwaProduktu, OpisProduktu, Cena, Dostepnosc, 
         return getProduct(id);
   }
   
-  export async function editProduct(ProduktID, NazwaProduktu, OpisProduktu, Cena, Dostepnosc, KategoriaID, ZdjecieProduktu) {
+export async function editProduct(ProduktID, NazwaProduktu, OpisProduktu, Cena, Dostepnosc, KategoriaID, ZdjecieProduktu) {
     const [rows] = await pool.query(`
         UPDATE Produkty SET NazwaProduktu = ?, OpisProduktu = ?, Cena = ?, Dostepnosc = ?, KategoriaID = ?, ZdjecieProduktu = ? WHERE ProduktID = ?`, 
         [NazwaProduktu, OpisProduktu, Cena, Dostepnosc, KategoriaID, ZdjecieProduktu, ProduktID]);
         return rows;
   }
   
-  export async function deleteProduct(ProduktID) {
+export async function deleteProduct(ProduktID) {
     const [deleted] = await pool.query(`
         DELETE FROM Produkty WHERE ProduktID = ?`, [ProduktID]);
         return deleted;
   }
   
-  export async function getProduct(ProduktID) {
+export async function getProduct(ProduktID) {
     const [rows] = await pool.query(`
         SELECT * FROM Produkty WHERE ProduktID = ?`, [ProduktID]);
         return rows[0];
   }
 
-  export async function getProducts() {
+export async function getProducts() {
     const [rows] = await pool.query(`
         SELECT * FROM Produkty`)
         return rows
+  }
+  
+export async function getProductsByCategory(filterCategory, sortField, sortOrder) {
+    let sql = "SELECT * FROM Produkty";
+  
+    if (filterCategory) {
+      sql += ` WHERE KategoriaID = ${filterCategory}`;
+    }
+  
+    if (sortField && sortOrder) {
+      sql += ` ORDER BY ${sortField} ${sortOrder}`;
+    }
+  
+    try {
+      const [rows] = await pool.query(sql);
+      return rows;
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
   }
 
