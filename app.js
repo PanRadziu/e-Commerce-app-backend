@@ -30,8 +30,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser} from './database.js';
-
+import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct} from './database.js';
 const app = express()
 app.use(cors());
 app.use(express.json())
@@ -67,9 +66,9 @@ app.post("/api/registerUser", async (req, res) => {
 });
 
 app.post("/api/loginUser", async (req, res) => {
-  const { Email } = req.body;
+  const { Email, Haslo } = req.body;
   try {
-    const result = await loginUser(Email);
+    const result = await loginUser(Email, Haslo);
     res.send(result);
   } catch (error) {
     console.error(error);
@@ -148,7 +147,65 @@ app.delete("/api/deleteProduct/:id", async (req, res) => {
   }
 });
 
+app.post("/api/addToCart/:ZamowienieID", async (req, res) => {
+  const { ZamowienieID } = req.params;
+  const { ProduktID, Ilosc } = req.body;
 
+  try {
+    const result = await addToCart(ZamowienieID, ProduktID, Ilosc);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+app.delete("/api/removeFromCart/:PozycjaID", async (req, res) => {
+  const { PozycjaID } = req.params;
+  try {
+    const result = await removeFromCart(PozycjaID);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+
+app.post("/api/addReview", async (req, res) => {
+  const { UzytkownikID, ProduktID, Ocena, Komentarz } = req.body;
+  try {
+    const result = await addReview(UzytkownikID, ProduktID, Ocena, Komentarz);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/api/getReviewsForProduct/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await getReviewsForProduct(id);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+
+// app.post("/api/addToCart/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const {ProduktID, Ilosc } = req.body;
+//   try {
+//     const result = await addToCart(id,  ProduktID, Ilosc);
+//     res.send(result);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ error: "Internal Server Error" });
+//   }
+// });
 
 
 // error handler
