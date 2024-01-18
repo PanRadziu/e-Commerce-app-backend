@@ -133,7 +133,7 @@ export async function getProductsByCategory(filterCategory, sortField, sortOrder
 
   export async function getCategoryById(KategoriaID) {
     const [rows] = await pool.query(`
-        SELECT * FROM Kategorie WHERE KategoriaID = ?`, [KategoriaID]);
+        SELECT NazwaKategorii FROM Kategorie WHERE KategoriaID = ?`, [KategoriaID]);
         return rows[0];
   }
 
