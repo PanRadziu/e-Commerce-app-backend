@@ -73,7 +73,10 @@ export async function loginUser(Email, Haslo) {
         next();
     });
 }
-
+export async function findUser(id) {
+    const [rows] = await pool.query(`SELECT * FROM Uzytkownicy WHERE UzytkownikID = ?`, [id]);
+    return rows[0];
+}
 
 export async function addProduct(NazwaProduktu, OpisProduktu, Cena, Dostepnosc, KategoriaID, ZdjecieProduktu) {
     const [result] = await pool.query(`
