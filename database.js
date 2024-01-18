@@ -131,6 +131,12 @@ export async function getProductsByCategory(filterCategory, sortField, sortOrder
     }
   }
 
+  export async function getCategoryById(KategoriaID) {
+    const [rows] = await pool.query(`
+        SELECT * FROM Kategorie WHERE KategoriaID = ?`, [KategoriaID]);
+        return rows[0];
+  }
+
 //TRZEBA BARDZIEJ POMYSLEC BO NIE DZIALA TAK JAK CHCE (PRZECIEZ UZYTKOWNIK MOZE MIEC WIELE PRODUKTOW W KOSZYKU)
 
   export async function addToCart(ZamowienieID, ProduktID, Ilosc) {
