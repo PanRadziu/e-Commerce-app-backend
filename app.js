@@ -30,7 +30,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct, verifyToken, createOrder,findUser, getCategoryById, getProductSort} from './database.js';
+import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct, verifyToken, createOrder,findUser, getCategoryById, getProductSort, addNewCategory} from './database.js';
 const app = express()
 app.use(cors());
 app.use(express.json())
@@ -127,6 +127,17 @@ app.post("/api/getProductsByCategory", async (req, res) => {
     res.send(products);
   } catch (error) {
     console.error(error.message);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/api/addNewCategory", async (req, res) => {
+  const { NazwaKategorii } = req.body;
+  try {
+    const result = await addNewCategory(NazwaKategorii);
+    res.send(result);
+  } catch (error) {
+    console.error(error);
     res.status(500).send({ error: "Internal Server Error" });
   }
 });

@@ -137,7 +137,11 @@ export async function getProductsByCategory(filterCategory) {
         return rows[0];
   }
 
-//TRZEBA BARDZIEJ POMYSLEC BO NIE DZIALA TAK JAK CHCE (PRZECIEZ UZYTKOWNIK MOZE MIEC WIELE PRODUKTOW W KOSZYKU)
+  export async function addNewCategory(NazwaKategorii) {
+    const [rows] = await pool.query(`
+        INSERT INTO Kategorie (NazwaKategorii) VALUES (?)`, [NazwaKategorii]);
+        return rows;
+  }
 
   export async function addToCart(ZamowienieID, ProduktID, Ilosc) {
     const getProductPriceQuery = "SELECT Cena FROM Produkty WHERE ProduktID = ?";
