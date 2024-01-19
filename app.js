@@ -30,7 +30,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct, verifyToken, createOrder,findUser, getCategoryById, getProductSort, addNewCategory} from './database.js';
+import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct, verifyToken, createOrder,findUser, getCategoryById, getProductSort, addNewCategory, getCategoryID} from './database.js';
 const app = express()
 app.use(cors());
 app.use(express.json())
@@ -141,6 +141,16 @@ app.post("/api/addNewCategory", async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+app.get("/api/getCategoryId", async (req, res) => {
+  try {
+    const result = await getCategoryID();
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
 
 app.get("/api/getCategoryById/:id", async (req, res) => {
   const id = req.params.id;
@@ -153,9 +163,6 @@ app.get("/api/getCategoryById/:id", async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log("Server is running on port 8000");
-});
 
 app.post("/api/addProduct", async (req, res) => {
   const { NazwaProduktu, OpisProduktu, Cena, Dostepnosc, KategoriaID, ZdjecieProduktu } = req.body;

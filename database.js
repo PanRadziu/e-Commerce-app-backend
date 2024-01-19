@@ -137,6 +137,13 @@ export async function getProductsByCategory(filterCategory) {
         return rows[0];
   }
 
+  export async function getCategoryID() {
+    const [rows] = await pool.query(`
+        SELECT KategoriaID FROM Kategorie`);
+        return rows;
+  }
+
+
   export async function addNewCategory(NazwaKategorii) {
     const [rows] = await pool.query(`
         INSERT INTO Kategorie (NazwaKategorii) VALUES (?)`, [NazwaKategorii]);
