@@ -143,6 +143,12 @@ export async function getProductsByCategory(filterCategory) {
         return rows;
   }
 
+  export async function getCategory() {
+    const [rows] = await pool.query(`
+        SELECT * FROM Kategorie`);
+        return rows;
+  }
+
 
   export async function addNewCategory(NazwaKategorii) {
     const [rows] = await pool.query(`

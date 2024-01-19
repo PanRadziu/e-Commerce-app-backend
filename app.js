@@ -30,7 +30,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct, verifyToken, createOrder,findUser, getCategoryById, getProductSort, addNewCategory, getCategoryID} from './database.js';
+import {addProduct, editProduct, deleteProduct, getProducts, getProduct,getProductsByCategory, registerUser, loginUser, addToCart, removeFromCart, addReview,getReviewsForProduct, verifyToken, createOrder,findUser, getCategoryById, getProductSort, addNewCategory, getCategoryID, getCategory} from './database.js';
 const app = express()
 app.use(cors());
 app.use(express.json())
@@ -150,6 +150,17 @@ app.get("/api/getCategoryId", async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+
+app.get("/api/getCategory", async (req, res) => {
+  try {
+    const result = await getCategory();
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
 
 
 app.get("/api/getCategoryById/:id", async (req, res) => {
