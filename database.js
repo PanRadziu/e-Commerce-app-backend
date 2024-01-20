@@ -9,27 +9,6 @@ const pool = mysql.createPool({
     database: 'ecommerceapp'
 }).promise()
 
-
-
-// export async function getItem(id){
-//     const [rows] = await pool.query(
-//         `SELECT * FROM przedmioty WHERE id  = ?`, [id])
-//         return rows[0]
-// }
-
-// export async function createItem(nazwa,cena,opis){
-//     const [result] = await pool.query(`
-//         INSERT INTO przedmioty (nazwa,cena,opis) VALUES (?,?,?)`, [nazwa,cena,opis])
-//         const id = result.insertId
-//         return getItem(id)
-// }
-
-// export async function getItems() {
-//     const [rows] = await pool.query(
-//         "SELECT * FROM przedmioty")
-//         return rows
-// }
-
 export async function registerUser(Imie, Nazwisko, Email, Haslo) {
     const hashedPassword = await bcrypt.hash(Haslo, 10);
     const [result] = await pool.query(`
@@ -59,7 +38,6 @@ export async function loginUser(Email, Haslo) {
   }
 
   export function verifyToken(req, res, next) {
-    // const token = req.cookies.token;
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
         return res.status(403).send({ error: 'Brak autoryzacji' });
@@ -156,25 +134,6 @@ export async function getProductsByCategory(filterCategory) {
         return rows;
   }
 
-  export async function addToCart(ZamowienieID, ProduktID, Ilosc) {
-    const getProductPriceQuery = "SELECT Cena FROM Produkty WHERE ProduktID = ?";
-    const addToOrderQuery = "INSERT INTO PozycjeZamowienia (ZamowienieID, ProduktID, Ilosc, CenaJednostkowa) VALUES (?, ?, ?, ?)";
-  
-    try {
-      // Pobierz cenę produktu
-      const [product] = await pool.query(getProductPriceQuery, [ProduktID]);
-      const CenaJednostkowa = product[0].Cena * Ilosc;
-  
-      // Dodaj do zamówienia
-      const [zamowienie]  = await pool.query(addToOrderQuery, [ZamowienieID, ProduktID, Ilosc, CenaJednostkowa]);
-  
-      return { zamowienie };
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
   export async function createOrder(UzytkownikID, CenaKoncowa) {
     const query = `
         INSERT INTO Zamowienia (UzytkownikID, CenaKoncowa, Status)
@@ -185,15 +144,6 @@ export async function getProductsByCategory(filterCategory) {
 
     return await pool.query(query, values);
 }
-
-
-
-  export async function removeFromCart(PozycjaID) {
-    const [rows] = await pool.query(`
-      DELETE FROM PozycjeZamowienia WHERE PozycjaID = ?`, [PozycjaID]);
-      return rows;
-  }
-
 
   export async function addReview(UzytkownikID, ProduktID, Ocena, Komentarz) {
     const [rows] = await pool.query(`
